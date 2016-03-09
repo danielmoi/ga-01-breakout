@@ -25,7 +25,7 @@ var paddleX = (canvas.width - paddleWidth) / 2; // initial paddle x
 
 var dpX = 7;
 
-var pColor = 'firebrick';
+var paddleColor = 'rgb(74,57,41)';
 
 // TARGET VARIABLES
 var arrTargets = [];
@@ -63,7 +63,7 @@ var drawBall = function() {
 var drawPaddle = function() {
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height - pHeight, paddleWidth, pHeight);
-  ctx.fillStyle = pColor;
+  ctx.fillStyle = paddleColor;
   ctx.fill();
   ctx.closePath();
 };
@@ -176,7 +176,7 @@ var incrementPaddle = function() {
 var catbus = $('.catbus')[0];
 var sign = 1;
 catbus.style.left = '420px';
-catbus.style.top = '-13px';
+catbus.style.top = '-20px';
 
 
 
@@ -326,7 +326,6 @@ var onMouseMove = function(event) {
 
     // place paddle's middle at mouseX (half the paddle width)
     paddleX = relativeX - (paddleWidth / 2);
-    moveCatbus();
 
   }
 
