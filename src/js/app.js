@@ -28,7 +28,24 @@ var drawEverything = function() {
 };
 
 var incrementBall = function() {
+
+  // If ball hits left / right walls, change direction and color
+  if (bX + dbX > (canvas.width - bRadius) || bX + dbX < bRadius) {
+    dbX = -dbX;
+  }
+
+  // If ball hits top wall
+  if (bY + dbY < bRadius) {
+    dbY = -dbY;
+  }
+  // If ball hits bottom wall
+  else if (bY + dbY > (canvas.height - bRadius)) {
+    dbY = -dbY;
+  }
+
+
   bX += dbX;
   bY += dbY;
 };
+
 drawEverything();
