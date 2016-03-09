@@ -1,16 +1,23 @@
-// CREATE CANVAS
-var canvas = document.getElementById('myCanvas');
-var ctx = canvas.getContext('2d');
+// CREATE c
+var c = document.getElementById('myCanvas');
+var ctx = c.getContext('2d');
 
 // BALL VARIABLES
-var bX = canvas.width / 2;
-var bY = canvas.height - 30;
+var bX = c.width / 2; // initial ball x
+var bY = c.height - 30; // initial ball y
 
 var dbX = 2;
 var dbY = -2;
 
 var bRadius = 10;
 var bColor = 'tomato';
+
+// PADDLE VARIABLES
+var pHeight = 10;
+var pWidth = 70;
+var pX = (c.width - pWidth) / 2; // initial paddle x
+
+var pColor = 'firebrick';
 
 // TIMER VARIABLES
 var rAFid;
@@ -24,34 +31,45 @@ var drawBall = function() {
   ctx.closePath();
 };
 
-var drawEverything = function() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawBall();
-
-  incrementBall();
-
-  rAFid = requestAnimationFrame(drawEverything);
+var drawPaddle = function() {
+  ctx.beginPath();
+  ctx.rect(pX, c.height - pHeight, pWidth, pHeight);
+  ctx.fillStyle = pColor;
+  ctx.fill();
+  ctx.closePath();
+  console.log('x');
 };
 
 var incrementBall = function() {
 
   // If ball hits left / right walls, change direction and color
-  if (bX + dbX > (canvas.width - bRadius) || bX + dbX < bRadius) {
+  if (bX + dbX > (c.width - bRadius) || bX + dbX < bRadius) {
     dbX = -dbX;
   }
 
-  // If ball hits top wall
+  // If ball hits top wall, change directions
   if (bY + dbY < bRadius) {
     dbY = -dbY;
   }
-  // If ball hits bottom wall
-  else if (bY + dbY > (canvas.height - bRadius)) {
+  // If ball hits bottom wall, change directions
+  else if (bY + dbY > (c.height - bRadius)) {
     dbY = -dbY;
   }
 
-
+  // Increment ball
   bX += dbX;
   bY += dbY;
+};
+
+
+var drawEverything = function() {
+  ctx.clearRect(0, 0, c.width, c.height);
+  drawBall();
+  drawPaddle();
+
+  incrementBall();
+
+  rAFid = requestAnimationFrame(drawEverything);
 };
 
 drawEverything();
