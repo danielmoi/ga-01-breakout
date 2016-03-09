@@ -58,14 +58,32 @@ var incrementBall = function() {
   if (bY + dbY < bRadius) {
     dbY = -dbY;
   }
-  // If ball hits bottom wall, change directions
+  // If ball hits bottom wall... (single vertical conditional)
   else if (bY + dbY > (c.height - bRadius)) {
-    dbY = -dbY;
-  }
+
+    // TODO: Make ball hit at top of paddle
+
+    // If ball hits bat (2 horizontal conditionals), change directions
+    if (bX > pX && bX < (pX + pWidth)) {
+      dbY = -dbY;
+    }
+
+    // If ball hits bottom wall
+    // Reset values
+    else {
+      bX = c.width / 2;
+      bY = c.height - 30;
+      dbX = 2;
+      dbY = -2;
+      pX = (c.width - pWidth) / 2;
+    }
+
+  } // end else if
 
   // Increment ball
   bX += dbX;
   bY += dbY;
+
 };
 
 var incrementPaddle = function() {
