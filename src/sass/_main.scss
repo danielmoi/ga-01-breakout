@@ -3,7 +3,7 @@
   padding: 0;
 }
 
-html, 
+html,
 body {
   margin: 0;
   padding: 0;
@@ -11,7 +11,7 @@ body {
 //  height: 100%;
 }
 
-// TYPOGRAPHY 
+// TYPOGRAPHY
 
 .header {
   text-align: center;
@@ -27,8 +27,17 @@ body {
 
 // SECTIONS
 
+canvas {
+  background: #eee;
+  display: block;
+  margin: 0 auto;
+}
 
-
+// CONTROLS
+.controls {
+  text-align: center;
+  padding-top: 30px;
+}
 
 
 // ELEMENTS
@@ -47,10 +56,10 @@ input {
 
 button {
   padding: 10px;
-  background-color: gray;
-  color: white;
+  background-color: white;
+  color: $primary;
   font-size: 1em;
-  border: 1px solid gray;
+  border: 1px solid $primary;
   border-radius: 5px;
   cursor: pointer;
   &:focus {
