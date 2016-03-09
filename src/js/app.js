@@ -17,10 +17,18 @@ var pHeight = 10;
 var pWidth = 70;
 var pX = (c.width - pWidth) / 2; // initial paddle x
 
+var dpX = 7;
+
 var pColor = 'firebrick';
 
 // TIMER VARIABLES
 var rAFid;
+
+// KEYPRESS VARIABLES
+var rightPress;
+var leftPress;
+
+///////////////
 
 // FUNCTIONS
 var drawBall = function() {
@@ -37,7 +45,6 @@ var drawPaddle = function() {
   ctx.fillStyle = pColor;
   ctx.fill();
   ctx.closePath();
-  console.log('x');
 };
 
 var incrementBall = function() {
@@ -61,21 +68,67 @@ var incrementBall = function() {
   bY += dbY;
 };
 
+var incrementPaddle = function() {
+  // Move paddle right, delimited by right wall
+  if (rightPress && pX < (c.width - pWidth)) {
+    pX += dpX;
+  }
 
+  // Move paddle left, delimited by left wall
+  else if (leftPress && pX > 0) {
+    pX -= dpX;
+  }
+
+
+};
+
+// CONTAINER FUNCTION
 var drawEverything = function() {
   ctx.clearRect(0, 0, c.width, c.height);
   drawBall();
   drawPaddle();
 
   incrementBall();
+  incrementPaddle();
 
   rAFid = requestAnimationFrame(drawEverything);
 };
 
+// Let's go!
 drawEverything();
 
-// BUTTON HANDLERS
+// KEYBOARD CALLBACKS
+// These need to be declared before the keyboard handlers
+var onKeyDown = function(event) {
+  // Right key down
+  if (event.keyCode === 39) {
+    rightPress = true;
+  }
+  // Left key down
+  else if (event.keyCode === 37) {
+    leftPress = true;
+  }
+};
 
+var onKeyUp = function(event) {
+  // Right key up
+  if (event.keyCode === 39) {
+    rightPress = false;
+  }
+  // Left key up
+  else if (event.keyCode === 37) {
+    leftPress = false;
+  }
+};
+
+
+// KEYBOARD HANDLERS
+$(document).on('keydown', onKeyDown);
+$(document).on('keyup', onKeyUp);
+
+
+
+// BUTTON HANDLERS
 $('.start').on('click', function() {
   drawEverything();
 });
