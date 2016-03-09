@@ -19,9 +19,16 @@ var drawBall = function() {
 };
 
 var drawEverything = function() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBall();
+
+  incrementBall();
 
   var rAFid = requestAnimationFrame(drawEverything);
 };
 
+var incrementBall = function() {
+  bX += dbX;
+  bY += dbY;
+};
 drawEverything();
