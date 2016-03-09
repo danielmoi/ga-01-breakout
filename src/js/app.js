@@ -1,6 +1,6 @@
-// CREATE c
-var c = document.getElementById('myCanvas');
-var ctx = c.getContext('2d');
+// CREATE CANVAS
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
 
 // PLAYER VARIABLES
 var score = 0;
@@ -9,8 +9,8 @@ var lives = 3;
 var textColor = 'gray';
 
 // BALL VARIABLES
-var ballX = c.width / 2; // initial ball x
-var ballY = c.height - 30; // initial ball y
+var ballX = canvas.width / 2; // initial ball x
+var ballY = canvas.height - 30; // initial ball y
 
 var dbX = 2;
 var dbY = -2;
@@ -21,7 +21,7 @@ var bColor = 'tomato';
 // PADDLE VARIABLES
 var pHeight = 10;
 var paddleWidth = 70;
-var paddleX = (c.width - paddleWidth) / 2; // initial paddle x
+var paddleX = (canvas.width - paddleWidth) / 2; // initial paddle x
 
 var dpX = 7;
 
@@ -62,7 +62,7 @@ var drawBall = function() {
 
 var drawPaddle = function() {
   ctx.beginPath();
-  ctx.rect(paddleX, c.height - pHeight, paddleWidth, pHeight);
+  ctx.rect(paddleX, canvas.height - pHeight, paddleWidth, pHeight);
   ctx.fillStyle = pColor;
   ctx.fill();
   ctx.closePath();
@@ -95,7 +95,7 @@ var drawTargets = function() {
 var incrementBall = function() {
 
   // If ball hits left / right walls, change horizontal direction and color
-  if (ballX + dbX > (c.width - ballRadius) || ballX + dbX < ballRadius) {
+  if (ballX + dbX > (canvas.width - ballRadius) || ballX + dbX < ballRadius) {
     dbX = -dbX;
   }
 
@@ -104,7 +104,7 @@ var incrementBall = function() {
     dbY = -dbY;
   }
   // If ball hits bottom wall... (single vertical conditional)
-  else if (ballY + dbX > (c.height - ballRadius)) {
+  else if (ballY + dbX > (canvas.height - ballRadius)) {
 
     // TODO: Make ball hit at top of paddle
 
@@ -125,21 +125,21 @@ var incrementBall = function() {
         // reset values
         score = 0;
         lives = 3;
-        ballX = c.width / 2;
-        ballY = c.height - 30;
+        ballX = canvas.width / 2;
+        ballY = canvas.height - 30;
         dbX = 2;
         dbY = -2;
-        paddleX = (c.width - paddleWidth) / 2;
+        paddleX = (canvas.width - paddleWidth) / 2;
       }
       // If still lives left...
       else {
         // reset values
 
-        ballX = c.width / 2;
-        ballY = c.height - 30;
+        ballX = canvas.width / 2;
+        ballY = canvas.height - 30;
         dbX = 2;
         dbY = -2;
-        paddleX = (c.width - paddleWidth) / 2;
+        paddleX = (canvas.width - paddleWidth) / 2;
       }
 
     }
@@ -154,7 +154,7 @@ var incrementBall = function() {
 
 var incrementPaddle = function() {
   // Move paddle right, delimited ballY right wall
-  if (rightPress && paddleX < (c.width - paddleWidth)) {
+  if (rightPress && paddleX < (canvas.width - paddleWidth)) {
     paddleX += dpX;
   }
 
@@ -232,12 +232,12 @@ var drawScore = function() {
 var drawLives = function() {
   ctx.font = '16px Arial';
   ctx.fillStyle = textColor;
-  ctx.fillText('Lives: ' + lives, c.width - 65, 20);
+  ctx.fillText('Lives: ' + lives, canvas.width - 65, 20);
 };
 
 // CONTAINER FUNCTION
 var drawEverything = function() {
-  ctx.clearRect(0, 0, c.width, c.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBall();
   drawPaddle();
   drawTargets();
@@ -286,9 +286,9 @@ var onMouseMove = function(event) {
 
   // relativeX is the gap between the mouseX and the left edge of the canvas
   // This can be re-interpreted as the position of the mouse, setting the left edge to be ZERO.
-  relativeX = event.clientX - c.offsetLeft;
+  relativeX = event.clientX - canvas.offsetLeft;
 
-  if (relativeX > (paddleWidth / 2) && relativeX < c.width - (paddleWidth / 2)) {
+  if (relativeX > (paddleWidth / 2) && relativeX < canvas.width - (paddleWidth / 2)) {
 
     // place paddle's middle at mouseX (half the paddle width)
     paddleX = relativeX - (paddleWidth / 2);
