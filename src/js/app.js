@@ -180,18 +180,26 @@ catbus.style.top = '-20px';
 
 
 
+var direction;
 
 
 var moveCatbusLeft = function() {
   sign = -1;
   catbus.style.transform = 'scaleX(' + sign + ')';
   catbus.style.left = canvas.offsetLeft + (paddleX - 125) + 'px';
+  direction = 'left';
 };
 
 var moveCatbusRight = function() {
   sign = 1;
   catbus.style.transform = 'scaleX(' + sign + ')';
   catbus.style.left = canvas.offsetLeft + (paddleX - 125) + 'px';
+  direction = 'right';
+
+};
+
+var moveCatbus = function() {
+  catbus.style.left = canvas.offsetLeft +(paddleX - 125) + 'px';
 };
 
 
@@ -320,12 +328,15 @@ var onMouseMove = function(event) {
 
   // relativeX is the gap between the mouseX and the left edge of the canvas
   // This can be re-interpreted as the position of the mouse, setting the left edge to be ZERO.
+
   relativeX = event.clientX - canvas.offsetLeft;
+  var prevRelativeX = relativeX;
 
   if (relativeX > (paddleWidth / 2) && relativeX < canvas.width - (paddleWidth / 2)) {
 
     // place paddle's middle at mouseX (half the paddle width)
     paddleX = relativeX - (paddleWidth / 2);
+    moveCatbus();
 
   }
 
