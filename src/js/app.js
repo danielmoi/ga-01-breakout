@@ -3,19 +3,19 @@ var c = document.getElementById('myCanvas');
 var ctx = c.getContext('2d');
 
 // BALL VARIABLES
-var bX = c.width / 2; // initial ball x
-var bY = c.height - 30; // initial ball y
+var ballX = c.width / 2; // initial ball x
+var ballY = c.height - 30; // initial ball y
 
 var dbX = 2;
 var dbY = -2;
 
-var bRadius = 10;
+var ballRadius = 10;
 var bColor = 'tomato';
 
 // PADDLE VARIABLES
 var pHeight = 10;
-var pWidth = 70;
-var pX = (c.width - pWidth) / 2; // initial paddle x
+var paddleWidth = 70;
+var paddleX = (c.width - paddleWidth) / 2; // initial paddle x
 
 var dpX = 7;
 
@@ -42,26 +42,13 @@ var rAFid;
 var rightPress;
 var leftPress;
 
-// Generate target array
-
-var buildArrTargets = function() {
-  for (var col = 0; col < targetColumnCount; col++) {
-    arrTargets[col] = [];
-    for (var row = 0; row < targetRowCount; row++) {
-      arrTargets[col][row] = {
-        x: 0,
-        y: 0
-      };
-    }
-  }
-};
 
 ///////////////
 
 // FUNCTIONS
 var drawBall = function() {
   ctx.beginPath();
-  ctx.arc(bX, bY, bRadius, 0, Math.PI * 2);
+  ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
   ctx.fillStyle = bColor;
   ctx.fill();
   ctx.closePath();
@@ -69,7 +56,7 @@ var drawBall = function() {
 
 var drawPaddle = function() {
   ctx.beginPath();
-  ctx.rect(pX, c.height - pHeight, pWidth, pHeight);
+  ctx.rect(paddleX, c.height - pHeight, paddleWidth, pHeight);
   ctx.fillStyle = pColor;
   ctx.fill();
   ctx.closePath();
@@ -96,55 +83,104 @@ var drawTargets = function() {
 
 var incrementBall = function() {
 
-  // If ball hits left / right walls, change direction and color
-  if (bX + dbX > (c.width - bRadius) || bX + dbX < bRadius) {
+  // If ball hits left / right walls, change horizontal direction and color
+  if (ballX + dbX > (c.width - ballRadius) || ballX + dbX < ballRadius) {
     dbX = -dbX;
   }
 
-  // If ball hits top wall, change directions
-  if (bY + dbY < bRadius) {
+  // If ball hits top wall, change vertical direction
+  if (ballY + dbX < ballRadius) {
     dbY = -dbY;
   }
   // If ball hits bottom wall... (single vertical conditional)
-  else if (bY + dbY > (c.height - bRadius)) {
+  else if (ballY + dbX > (c.height - ballRadius)) {
 
     // TODO: Make ball hit at top of paddle
 
-    // If ball hits bat (2 horizontal conditionals), change directions
-    if (bX > pX && bX < (pX + pWidth)) {
+    // If ball hits bat (2 horizontal delimiters), change vertical direction
+    if (ballX > paddleX && ballX < (paddleX + paddleWidth)) {
       dbY = -dbY;
     }
 
     // If ball hits bottom wall
     // Reset values
     else {
-      bX = c.width / 2;
-      bY = c.height - 30;
+      ballX = c.width / 2;
+      ballY = c.height - 30;
       dbX = 2;
       dbY = -2;
-      pX = (c.width - pWidth) / 2;
+      paddleX = (c.width - paddleWidth) / 2;
     }
 
   } // end else if
 
   // Increment ball
-  bX += dbX;
-  bY += dbY;
+  ballX += dbX;
+  ballY += dbY;
 
 };
 
 var incrementPaddle = function() {
-  // Move paddle right, delimited by right wall
-  if (rightPress && pX < (c.width - pWidth)) {
-    pX += dpX;
+  // Move paddle right, delimited ballY right wall
+  if (rightPress && paddleX < (c.width - paddleWidth)) {
+    paddleX += dpX;
   }
 
-  // Move paddle left, delimited by left wall
-  else if (leftPress && pX > 0) {
-    pX -= dpX;
+  // Move paddle left, delimited ballY left wall
+  else if (leftPress && paddleX > 0) {
+    paddleX -= dpX;
   }
 
 
+};
+
+var buildArrTargets = function() {
+  for (var col = 0; col < targetColumnCount; col++) {
+    arrTargets[col] = [];
+    for (var row = 0; row < targetRowCount; row++) {
+      arrTargets[col][row] = {
+        x: 0,
+        y: 0
+      };
+    }
+  }
+};
+
+var detectCollision = function() {
+  for (var col = 0; col < targetColumnCount; col++) {
+    for (var row = 0; row < targetRowCount; row++) {
+      var target = arrTargets[col][row];
+
+      // calculations for ball-center being INSIDE the target
+      // we HAVE to use `&&` because ANY point that is INSIDE the target will actually satisfy **ALL** four of these conditions!
+
+      if (
+        // ball center is moving in from: left of target
+        ballX > target.x &&
+
+        // ball center is moving in from: right of target
+        ballX < target.x + targetWidth &&
+
+        // ball center is moving in from: top of target
+        ballY > target.y &&
+
+        // ball center is moving in from: bottom of target
+        ballY < target.y + targetHeight
+      )
+      // We do these things upon collision
+      {
+        // Move ball opposite vertical direction
+        dbY = -dbY;
+
+
+
+
+
+
+      }
+
+    }
+  }
 };
 
 // CONTAINER FUNCTION
@@ -154,8 +190,10 @@ var drawEverything = function() {
   drawPaddle();
   drawTargets();
 
+
   incrementBall();
   incrementPaddle();
+  detectCollision();
 
   rAFid = requestAnimationFrame(drawEverything);
 };
