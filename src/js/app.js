@@ -66,17 +66,22 @@ var drawTargets = function() {
   for (var col = 0; col < targetColumnCount; col++) {
     for (var row = 0; row < targetRowCount; row++) {
 
-      var targetX = (col * (targetWidth + targetGap)) + targetMarginLeft;
-      var targetY = (row * (targetHeight + targetGap)) + targetMarginTop;
+      // Only RE-draw targets that haven't been hit
 
-      arrTargets[col][row].x = targetX;
-      arrTargets[col][row].y = targetY;
+      if (arrTargets[col][row].status === 'on') {
 
-      ctx.beginPath();
-      ctx.rect(targetX, targetY, targetWidth, targetHeight);
-      ctx.fillStyle = targetColor;
-      ctx.fill();
-      ctx.closePath();
+        var targetX = (col * (targetWidth + targetGap)) + targetMarginLeft;
+        var targetY = (row * (targetHeight + targetGap)) + targetMarginTop;
+
+        arrTargets[col][row].x = targetX;
+        arrTargets[col][row].y = targetY;
+
+        ctx.beginPath();
+        ctx.rect(targetX, targetY, targetWidth, targetHeight);
+        ctx.fillStyle = targetColor;
+        ctx.fill();
+        ctx.closePath();
+      }
     }
   }
 };
@@ -140,7 +145,8 @@ var buildArrTargets = function() {
     for (var row = 0; row < targetRowCount; row++) {
       arrTargets[col][row] = {
         x: 0,
-        y: 0
+        y: 0,
+        status: 'on'
       };
     }
   }
@@ -171,6 +177,9 @@ var detectCollision = function() {
       {
         // Move ball opposite vertical direction
         dbY = -dbY;
+
+        // Set brick to disappear
+        target.status = 'off';
 
 
 
