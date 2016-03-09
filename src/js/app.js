@@ -120,7 +120,7 @@ var incrementBall = function() {
       lives -= 1;
 
       // if no lives left...
-      if (!lives) {
+      if (lives === 0) {
         console.log('LOSE');
         // reset values
         score = 0;
@@ -278,12 +278,30 @@ var onKeyUp = function(event) {
   }
 };
 
+// MOUSEMOVE CALLBACKS
+var onMouseMove = function(event) {
+
+  // relativeX is the gap between the mouseX and the left edge of the canvas
+  // This can be re-interpreted as the position of the mouse, setting the left edge to be ZERO.
+  relativeX = event.clientX - c.offsetLeft;
+
+  if (relativeX > (paddleWidth / 2) && relativeX < c.width - (paddleWidth / 2)) {
+
+    // place paddle's middle at mouseX (half the paddle width)
+    paddleX = relativeX - (paddleWidth / 2);
+  }
+
+
+
+
+};
 
 // KEYBOARD HANDLERS
 $(document).on('keydown', onKeyDown);
 $(document).on('keyup', onKeyUp);
 
-
+// MOUSE HANDLERS
+$(document).on('mousemove', onMouseMove);
 
 // BUTTON HANDLERS
 $('.start').on('click', function() {
