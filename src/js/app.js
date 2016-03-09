@@ -21,12 +21,40 @@ var dpX = 7;
 
 var pColor = 'firebrick';
 
+// TARGET VARIABLES
+var arrTargets = [];
+
+var targetRowCount = 4;
+var targetColumnCount = 5;
+
+var targetWidth = 70;
+var targetHeight = 20;
+var targetGap = 20;
+var targetMarginTop = 30;
+var targetMarginLeft = 30;
+
+var targetColor = 'slate';
+
 // TIMER VARIABLES
 var rAFid;
 
 // KEYPRESS VARIABLES
 var rightPress;
 var leftPress;
+
+// Generate target array
+
+var buildArrTargets = function() {
+  for (var col = 0; col < targetColumnCount; col++) {
+    arrTargets[col] = [];
+    for (var row = 0; row < targetRowCount; row++) {
+      arrTargets[col][row] = {
+        x: 0,
+        y: 0
+      };
+    }
+  }
+};
 
 ///////////////
 
@@ -45,6 +73,25 @@ var drawPaddle = function() {
   ctx.fillStyle = pColor;
   ctx.fill();
   ctx.closePath();
+};
+
+var drawTargets = function() {
+  for (var col = 0; col < targetColumnCount; col++) {
+    for (var row = 0; row < targetRowCount; row++) {
+
+      var targetX = (col * (targetWidth + targetGap)) + targetMarginLeft;
+      var targetY = (row * (targetHeight + targetGap)) + targetMarginTop;
+
+      arrTargets[col][row].x = targetX;
+      arrTargets[col][row].y = targetY;
+
+      ctx.beginPath();
+      ctx.rect(targetX, targetY, targetWidth, targetHeight);
+      ctx.fillStyle = targetColor;
+      ctx.fill();
+      ctx.closePath();
+    }
+  }
 };
 
 var incrementBall = function() {
@@ -105,6 +152,7 @@ var drawEverything = function() {
   ctx.clearRect(0, 0, c.width, c.height);
   drawBall();
   drawPaddle();
+  drawTargets();
 
   incrementBall();
   incrementPaddle();
@@ -113,6 +161,7 @@ var drawEverything = function() {
 };
 
 // Let's go!
+buildArrTargets();
 drawEverything();
 
 // KEYBOARD CALLBACKS
