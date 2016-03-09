@@ -2,6 +2,12 @@
 var c = document.getElementById('myCanvas');
 var ctx = c.getContext('2d');
 
+// PLAYER VARIABLES
+var score = 0;
+var lives = 3;
+
+var textColor = 'gray';
+
 // BALL VARIABLES
 var ballX = c.width / 2; // initial ball x
 var ballY = c.height - 30; // initial ball y
@@ -108,13 +114,34 @@ var incrementBall = function() {
     }
 
     // If ball hits bottom wall
-    // Reset values
     else {
-      ballX = c.width / 2;
-      ballY = c.height - 30;
-      dbX = 2;
-      dbY = -2;
-      paddleX = (c.width - paddleWidth) / 2;
+
+      // Decrement lives
+      lives -= 1;
+
+      // if no lives left...
+      if (!lives) {
+        console.log('LOSE');
+        // reset values
+        score = 0;
+        lives = 3;
+        ballX = c.width / 2;
+        ballY = c.height - 30;
+        dbX = 2;
+        dbY = -2;
+        paddleX = (c.width - paddleWidth) / 2;
+      }
+      // If still lives left...
+      else {
+        // reset values
+
+        ballX = c.width / 2;
+        ballY = c.height - 30;
+        dbX = 2;
+        dbY = -2;
+        paddleX = (c.width - paddleWidth) / 2;
+      }
+
     }
 
   } // end else if
@@ -181,7 +208,8 @@ var detectCollision = function() {
         // Set brick to disappear
         target.status = 'off';
 
-
+        // Increment score
+        score += 10;
 
 
 
@@ -190,6 +218,18 @@ var detectCollision = function() {
 
     }
   }
+};
+
+var drawScore = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.fillText('Score: ' + score, 8, 20);
+};
+
+var drawLives = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.fillText('Lives: ' + lives, c.width - 65, 20);
 };
 
 // CONTAINER FUNCTION
@@ -203,6 +243,9 @@ var drawEverything = function() {
   incrementBall();
   incrementPaddle();
   detectCollision();
+
+  drawScore();
+  drawLives();
 
   rAFid = requestAnimationFrame(drawEverything);
 };
