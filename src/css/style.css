@@ -40,6 +40,18 @@ canvas {
   padding-top: 30px;
 }
 
+.catbus-container {
+  position: relative;
+  height: 10px;
+}
+
+.catbus {
+  position: absolute;
+  width: 300px;
+  left: 420px;
+  top: -13px;
+}
+
 input {
   padding: 10px;
   background-color: white;

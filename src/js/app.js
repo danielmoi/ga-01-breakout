@@ -19,7 +19,7 @@ var ballRadius = 10;
 var bColor = 'tomato';
 
 // PADDLE VARIABLES
-var pHeight = 10;
+var pHeight = 20;
 var paddleWidth = 70;
 var paddleX = (canvas.width - paddleWidth) / 2; // initial paddle x
 
@@ -156,15 +156,49 @@ var incrementPaddle = function() {
   // Move paddle right, delimited ballY right wall
   if (rightPress && paddleX < (canvas.width - paddleWidth)) {
     paddleX += dpX;
+    // moveCatbusRight();
+    moveCatbusRight();
+
   }
 
   // Move paddle left, delimited ballY left wall
   else if (leftPress && paddleX > 0) {
     paddleX -= dpX;
+    // moveCatbusLeft();
+    moveCatbusLeft();
+
   }
 
 
 };
+
+/////////// CATBUS
+var catbus = $('.catbus')[0];
+var sign = 1;
+catbus.style.left = '420px';
+catbus.style.top = '-13px';
+
+
+
+
+
+var moveCatbusLeft = function() {
+  sign = -1;
+  catbus.style.transform = 'scaleX(' + sign + ')';
+  catbus.style.left = canvas.offsetLeft + (paddleX - 125) + 'px';
+};
+
+var moveCatbusRight = function() {
+  sign = 1;
+  catbus.style.transform = 'scaleX(' + sign + ')';
+  catbus.style.left = canvas.offsetLeft + (paddleX - 125) + 'px';
+};
+
+
+
+// $('img').on('click', moveCatbus);
+
+///////////////////
 
 var buildArrTargets = function() {
   for (var col = 0; col < targetColumnCount; col++) {
@@ -292,6 +326,8 @@ var onMouseMove = function(event) {
 
     // place paddle's middle at mouseX (half the paddle width)
     paddleX = relativeX - (paddleWidth / 2);
+    moveCatbus();
+
   }
 
 
