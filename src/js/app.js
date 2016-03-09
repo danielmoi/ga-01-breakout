@@ -100,7 +100,7 @@ var incrementBall = function() {
   }
 
   // If ball hits top wall, change vertical direction
-  if (ballY + dbX < ballRadius) {
+  if (ballY + dbY < ballRadius) {
     dbY = -dbY;
   }
   // If ball hits bottom wall... (single vertical conditional)
@@ -187,34 +187,37 @@ var detectCollision = function() {
       // calculations for ball-center being INSIDE the target
       // we HAVE to use `&&` because ANY point that is INSIDE the target will actually satisfy **ALL** four of these conditions!
 
-      if (
-        // ball center is moving in from: left of target
-        ballX > target.x &&
+      // only detect collision if target exists
+      if (target.status === 'on') {
+        if (
+          // ball center is moving in from: left of target
+          ballX > target.x &&
 
-        // ball center is moving in from: right of target
-        ballX < target.x + targetWidth &&
+          // ball center is moving in from: right of target
+          ballX < target.x + targetWidth &&
 
-        // ball center is moving in from: top of target
-        ballY > target.y &&
+          // ball center is moving in from: top of target
+          ballY > target.y &&
 
-        // ball center is moving in from: bottom of target
-        ballY < target.y + targetHeight
-      )
-      // We do these things upon collision
-      {
-        // Move ball opposite vertical direction
-        dbY = -dbY;
+          // ball center is moving in from: bottom of target
+          ballY < target.y + targetHeight
+        )
+        // We do these things upon collision
+        {
+          // Move ball opposite vertical direction
+          dbY = -dbY;
 
-        // Set brick to disappear
-        target.status = 'off';
+          // Set brick to disappear
+          target.status = 'off';
 
-        // Increment score
-        score += 10;
-
-
+          // Increment score
+          score += 10;
 
 
-      }
+
+
+        }
+      } // end if
 
     }
   }
