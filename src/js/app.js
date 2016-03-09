@@ -5,6 +5,7 @@ var ctx = canvas.getContext('2d');
 // PLAYER VARIABLES
 var score = 0;
 var lives = 3;
+var gameActive = true;
 
 var textColor = 'gray';
 
@@ -16,7 +17,7 @@ var dbX = 2;
 var dbY = -2;
 
 var ballRadius = 10;
-var bColor = 'tomato';
+var ballColor = 'tomato';
 
 // PADDLE VARIABLES
 var pHeight = 20;
@@ -25,7 +26,7 @@ var paddleX = (canvas.width - paddleWidth) / 2; // initial paddle x
 
 var dpX = 7;
 
-var paddleColor = 'rgb(74,57,41)';
+var paddleColor = 'rgba(74,57,41)';
 
 // TARGET VARIABLES
 var arrTargets = [];
@@ -39,7 +40,7 @@ var targetGap = 20;
 var targetMarginTop = 30;
 var targetMarginLeft = 30;
 
-var targetColor = 'slate';
+var targetColor = 'rgba(255,0,0)';
 
 // TIMER VARIABLES
 var rAFid;
@@ -48,6 +49,13 @@ var rAFid;
 var rightPress;
 var leftPress;
 
+// CATBUS SETUP
+var catbus = $('.catbus')[0];
+var sign = 1;
+catbus.style.left = '420px';
+catbus.style.top = '-20px';
+var direction;
+
 
 ///////////////
 
@@ -55,7 +63,7 @@ var leftPress;
 var drawBall = function() {
   ctx.beginPath();
   ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = bColor;
+  ctx.fillStyle = ballColor;
   ctx.fill();
   ctx.closePath();
 };
@@ -63,6 +71,8 @@ var drawBall = function() {
 var drawPaddle = function() {
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height - pHeight, paddleWidth, pHeight);
+
+  // Why is paddleColor overriden?
   ctx.fillStyle = paddleColor;
   ctx.fill();
   ctx.closePath();
@@ -119,28 +129,28 @@ var incrementBall = function() {
       // Decrement lives
       lives -= 1;
 
-      // if no lives left...
-      if (lives === 0) {
-        console.log('LOSE');
-        // reset values
-        score = 0;
-        lives = 3;
-        ballX = canvas.width / 2;
-        ballY = canvas.height - 30;
-        dbX = 2;
-        dbY = -2;
-        paddleX = (canvas.width - paddleWidth) / 2;
-      }
       // If still lives left...
-      else {
+      if (lives > 0) {
         // reset values
+        console.log('IF');
+        resetBallPaddleCatbus();
+        cancelAnimationFrame(rAFid);
 
-        ballX = canvas.width / 2;
-        ballY = canvas.height - 30;
-        dbX = 2;
-        dbY = -2;
-        paddleX = (canvas.width - paddleWidth) / 2;
+
       }
+
+      // if no lives left...
+      else {
+        // debugger;
+        console.log('ELSE');
+        // reset values
+        resetBallPaddleCatbus();
+        resetScoreLives();
+        // Why doesn't this cancel rAF? (why is gameActive needed?) but the button works?
+        cancelAnimationFrame(rAFid);
+        gameActive = false;
+      }
+
 
     }
 
@@ -172,17 +182,6 @@ var incrementPaddle = function() {
 
 };
 
-/////////// CATBUS
-var catbus = $('.catbus')[0];
-var sign = 1;
-catbus.style.left = '420px';
-catbus.style.top = '-20px';
-
-
-
-var direction;
-
-
 var moveCatbusLeft = function() {
   sign = -1;
   catbus.style.transform = 'scaleX(' + sign + ')';
@@ -199,14 +198,8 @@ var moveCatbusRight = function() {
 };
 
 var moveCatbus = function() {
-  catbus.style.left = canvas.offsetLeft +(paddleX - 125) + 'px';
+  catbus.style.left = canvas.offsetLeft + (paddleX - 125) + 'px';
 };
-
-
-
-// $('img').on('click', moveCatbus);
-
-///////////////////
 
 var buildArrTargets = function() {
   for (var col = 0; col < targetColumnCount; col++) {
@@ -265,6 +258,20 @@ var detectCollision = function() {
   }
 };
 
+var resetBallPaddleCatbus = function() {
+  ballX = canvas.width / 2;
+  ballY = canvas.height - 30;
+  dbX = 2;
+  dbY = -2;
+  paddleX = (canvas.width - paddleWidth) / 2;
+  moveCatbus();
+};
+
+var resetScoreLives = function() {
+  score = 0;
+  lives = 3;
+};
+
 var drawScore = function() {
   ctx.font = '16px Arial';
   ctx.fillStyle = textColor;
@@ -280,19 +287,21 @@ var drawLives = function() {
 // CONTAINER FUNCTION
 var drawEverything = function() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawBall();
-  drawPaddle();
-  drawTargets();
 
+  if (gameActive) {
+    drawBall();
+    drawPaddle();
+    drawTargets();
 
-  incrementBall();
-  incrementPaddle();
-  detectCollision();
+    incrementBall();
+    incrementPaddle();
+    detectCollision();
 
-  drawScore();
-  drawLives();
+    drawScore();
+    drawLives();
 
-  rAFid = requestAnimationFrame(drawEverything);
+    rAFid = requestAnimationFrame(drawEverything);
+  }
 };
 
 // Let's go!
