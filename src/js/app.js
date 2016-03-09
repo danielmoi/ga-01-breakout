@@ -226,16 +226,16 @@ var detectCollision = function() {
       if (target.status === 'on') {
         if (
           // ball center is moving in from: left of target
-          ballX > target.x &&
+          (ballX + ballRadius) > target.x &&
 
           // ball center is moving in from: right of target
-          ballX < target.x + targetWidth &&
+          (ballX - ballRadius) < target.x + targetWidth &&
 
           // ball center is moving in from: top of target
-          ballY > target.y &&
+          (ballY + ballRadius) > target.y &&
 
           // ball center is moving in from: bottom of target
-          ballY < target.y + targetHeight
+          (ballY - ballRadius) < target.y + targetHeight
         )
         // We do these things upon collision
         {
