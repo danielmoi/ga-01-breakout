@@ -215,6 +215,17 @@ var detectCollision = function() {
 
           // Change ball color
           ballColor = getRandomColor();
+
+          // Check if all targets have been hit === WIN
+          if (score === 10 * targetRowCount * targetColumnCount) {
+            console.log('You win in the console too!');
+
+            winDisplay();
+            cancelAnimationFrame(rAFid);
+            gameActive = false;
+            gameOver = true;
+
+          }
         }
       } // end if
 
@@ -270,6 +281,14 @@ var welcomeDisplay = function() {
   ctx.textAlign = 'center';
   ctx.fillText('Help Catbus hit the targets!', canvas.width / 2, 220);
   ctx.fillText('Press Spacebar to start.', canvas.width / 2, 250);
+};
+
+var winDisplay = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.textAlign = 'center';
+  ctx.fillText('Catbus says well done!!', canvas.width / 2, 220);
+  ctx.fillText('Press Spacebar to play again.', canvas.width / 2, 250);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -505,4 +524,5 @@ buildArrTargets();
 drawTargets();
 drawScore();
 drawLives();
+resetBallPaddleCatbus();
 welcomeDisplay();
