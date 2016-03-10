@@ -26,7 +26,7 @@ var paddleX = (canvas.width - paddleWidth) / 2; // initial paddle x
 
 var dpX = 7;
 
-var paddleColor = 'rgba(74,57,41)';
+var paddleColor = 'rgba(0,0,0,0)';
 
 // TARGET VARIABLES
 var arrTargets = [];
@@ -40,7 +40,7 @@ var targetGap = 20;
 var targetMarginTop = 30;
 var targetMarginLeft = 30;
 
-var targetColor = 'rgba(255,0,0)';
+var targetColor = 'rgb(84,91,133)';
 
 // TIMER VARIABLES
 var rAFid;
@@ -60,6 +60,15 @@ var direction;
 ///////////////
 
 // FUNCTIONS
+var getRandomColor = function() {
+  var letters = '0123456789ABCDEF'.split('');
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
+
 var drawBall = function() {
   ctx.beginPath();
   ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
@@ -121,6 +130,8 @@ var incrementBall = function() {
     // If ball hits bat (2 horizontal delimiters), change vertical direction
     if (ballX > paddleX && ballX < (paddleX + paddleWidth)) {
       dbY = -dbY;
+
+      ballColor = getRandomColor();
     }
 
     // If ball hits bottom wall
@@ -132,10 +143,12 @@ var incrementBall = function() {
       // If still lives left...
       if (lives > 0) {
         // reset values
-        console.log('IF');
+        // console.log('IF');
         resetBallPaddleCatbus();
+        gameActive = false;
         cancelAnimationFrame(rAFid);
-
+        // drawEverything();
+        // gameActive = true;
 
       }
 
@@ -247,6 +260,9 @@ var detectCollision = function() {
 
           // Increment score
           score += 10;
+
+          // Change ball color
+          ballColor = getRandomColor();
 
 
 
