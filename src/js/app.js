@@ -6,7 +6,7 @@ var ctx = canvas.getContext('2d');
 var score = 0;
 var lives = 3;
 var gameActive = true;
-var gameOver = false;
+var gameOver = null;
 
 var textColor = 'rgb(84,91,133)';
 
@@ -58,9 +58,9 @@ catbus.style.top = '-20px';
 var direction;
 
 
-///////////////
+///////////////////////////////////////////////////////////////////////////////
 
-// FUNCTIONS
+// FUNCTIONS - for loop
 var getRandomColor = function() {
   var letters = '0123456789ABCDEF'.split('');
   var color = '#';
@@ -156,11 +156,6 @@ var incrementBall = function() {
 
       // if no lives left...
       else {
-        // debugger;
-        console.log('ELSE');
-        // reset values
-
-        // Why doesn't this cancel rAF? (why is gameActive needed?) but the button works?
         gameOverDisplay();
         cancelAnimationFrame(rAFid);
         gameActive = false;
@@ -178,80 +173,7 @@ var incrementBall = function() {
 
 };
 
-var restartGame = function() {
-  gameOver = false;
-  resetBallPaddleCatbus();
-  resetScoreLives();
-  buildArrTargets();
-  gameActive = true;
-  drawEverything();
-};
 
-var gamePausedDisplay = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.fillText('Game paused. Press Spacebar to continue.', 65, 220);
-};
-
-var gameOverDisplay = function() {
-
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.fillText('Game over. Press Spacebar to restart.', 65, 220);
-};
-
-var lifeLostDisplay = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.fillText('Lives remaining: ' + lives + '. Press Spacebar to continue.', 65, 220);
-
-};
-
-var incrementPaddle = function() {
-  // Move paddle right, delimited ballY right wall
-  if (rightPress && paddleX < (canvas.width - paddleWidth)) {
-    paddleX += dpX;
-    moveCatbusRight();
-
-  }
-
-  // Move paddle left, delimited ballY left wall
-  else if (leftPress && paddleX > 0) {
-    paddleX -= dpX;
-    moveCatbusLeft();
-  }
-};
-
-var moveCatbusLeft = function() {
-  sign = -1;
-  catbus.style.transform = 'scaleX(' + sign + ')';
-  catbus.style.left = canvas.offsetLeft + (paddleX - 125) + 'px';
-  direction = 'left';
-};
-
-var moveCatbusRight = function() {
-  sign = 1;
-  catbus.style.transform = 'scaleX(' + sign + ')';
-  catbus.style.left = canvas.offsetLeft + (paddleX - 125) + 'px';
-  direction = 'right';
-};
-
-var moveCatbus = function() {
-  catbus.style.left = canvas.offsetLeft + (paddleX - 125) + 'px';
-};
-
-var buildArrTargets = function() {
-  for (var col = 0; col < targetColumnCount; col++) {
-    arrTargets[col] = [];
-    for (var row = 0; row < targetRowCount; row++) {
-      arrTargets[col][row] = {
-        x: 0,
-        y: 0,
-        status: 'on'
-      };
-    }
-  }
-};
 
 var detectCollision = function() {
   for (var col = 0; col < targetColumnCount; col++) {
@@ -296,6 +218,67 @@ var detectCollision = function() {
   }
 };
 
+var drawScore = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.fillText('Score: ' + score, 8, 20);
+};
+
+var drawLives = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.fillText('Lives: ' + lives, canvas.width - 65, 20);
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+// Functions - single calls
+var buildArrTargets = function() {
+  for (var col = 0; col < targetColumnCount; col++) {
+    arrTargets[col] = [];
+    for (var row = 0; row < targetRowCount; row++) {
+      arrTargets[col][row] = {
+        x: 0,
+        y: 0,
+        status: 'on'
+      };
+    }
+  }
+};
+
+var restartGame = function() {
+  gameOver = false;
+  resetBallPaddleCatbus();
+  resetScoreLives();
+  buildArrTargets();
+  gameActive = true;
+  drawEverything();
+};
+
+var gamePausedDisplay = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.fillText('Game paused. Press Spacebar to continue.', 65, 220);
+};
+
+var gameOverDisplay = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.fillText('Game over. Press Spacebar to restart.', 65, 220);
+};
+
+var lifeLostDisplay = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.fillText('Lives remaining: ' + lives + '. Press Spacebar to continue.', 65, 220);
+};
+
+var welcomeDisplay = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.fillText('Welcome to Catbus 3000!. Press Spacebar to start!', 65, 220);
+};
+
 var resetBallPaddleCatbus = function() {
   ballX = canvas.width / 2;
   ballY = canvas.height - 30;
@@ -310,19 +293,62 @@ var resetScoreLives = function() {
   lives = 3;
 };
 
-var drawScore = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.fillText('Score: ' + score, 8, 20);
+var pauseGame = function() {
+  if (gameActive === true) {
+    gameActive = false;
+    cancelAnimationFrame(rAFid);
+    gamePausedDisplay();
+  }
+};
+var resumeGame = function() {
+  if (gameActive === false || gameOver === null) {
+    console.log('resume game');
+    gameActive = true;
+    drawEverything();
+  }
 };
 
-var drawLives = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.fillText('Lives: ' + lives, canvas.width - 65, 20);
+///////////////////////////////////////////////////////////////////////////////
+
+// Functions - Keyboard / Mouse inputs
+
+var incrementPaddle = function() {
+
+  // Move paddle right, delimited ballY right wall
+  if (rightPress && paddleX < (canvas.width - paddleWidth)) {
+    paddleX += dpX;
+    moveCatbusRight();
+
+  }
+
+  // Move paddle left, delimited ballY left wall
+  else if (leftPress && paddleX > 0) {
+    paddleX -= dpX;
+    moveCatbusLeft();
+  }
 };
 
-// CONTAINER FUNCTION
+var moveCatbusLeft = function() {
+  sign = -1;
+  catbus.style.transform = 'scaleX(' + sign + ')';
+  catbus.style.left = canvas.offsetLeft + (paddleX - 125) + 'px';
+  direction = 'left';
+};
+
+var moveCatbusRight = function() {
+  sign = 1;
+  catbus.style.transform = 'scaleX(' + sign + ')';
+  catbus.style.left = canvas.offsetLeft + (paddleX - 125) + 'px';
+  direction = 'right';
+};
+
+var moveCatbus = function() {
+  catbus.style.left = canvas.offsetLeft + (paddleX - 125) + 'px';
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+// Container LOOP FUNCTION
 var drawEverything = function() {
 
   if (gameActive) {
@@ -344,56 +370,10 @@ var drawEverything = function() {
   }
 };
 
-// Let's go!
-buildArrTargets();
-drawEverything();
+///////////////////////////////////////////////////////////////////////////////
 
-// KEYBOARD CALLBACKS
+// Callbacks - KEYBOARD
 // These need to be declared before the keyboard handlers
-var onKeyDown = function(event) {
-  // Right key down
-  if (event.keyCode === 39) {
-    rightPress = true;
-  }
-  // Left key down
-  else if (event.keyCode === 37) {
-    leftPress = true;
-  } else if (event.keyCode === 32) {
-
-    if (gameOver) {
-      restartGame();
-    }
-    // if gameActive is true
-    else if (gameActive) {
-      pauseGame();
-    }
-    // if gameActive is false
-    else {
-      resumeGame();
-
-
-    }
-
-  }
-};
-
-var pauseGame = function() {
-  if (gameActive === true) {
-    gameActive = false;
-    cancelAnimationFrame(rAFid);
-    gamePausedDisplay();
-  }
-};
-
-//
-var resumeGame = function() {
-  if (gameActive === false) {
-    gameActive = true;
-    drawEverything();
-  }
-};
-
-
 
 var onKeyUp = function(event) {
   // Right key up
@@ -406,7 +386,36 @@ var onKeyUp = function(event) {
   }
 };
 
-// MOUSEMOVE CALLBACKS
+var onKeyDown = function(event) {
+  // Right key down
+  if (event.keyCode === 39) {
+    rightPress = true;
+  }
+  // Left key down
+  else if (event.keyCode === 37) {
+    leftPress = true;
+  }
+  // Spacebar
+  else if (event.keyCode === 32) {
+
+    if (gameOver === null) {
+      drawEverything();
+    }
+    else if (gameOver) {
+      restartGame();
+    }
+    // if gameActive is true
+    else if (gameActive) {
+      pauseGame();
+    }
+    // if gameActive is false
+    else {
+      resumeGame();
+    }
+  }
+};
+
+// Callbacks – Mousemove
 var onMouseMove = function(event) {
 
   // relativeX is the gap between the mouseX and the left edge of the canvas
@@ -420,13 +429,10 @@ var onMouseMove = function(event) {
     // place paddle's middle at mouseX (half the paddle width)
     paddleX = relativeX - (paddleWidth / 2);
     moveCatbus();
-
   }
-
-
-
-
 };
+
+///////////////////////////////////////////////////////////////////////////////
 
 // KEYBOARD HANDLERS
 $(document).on('keydown', onKeyDown);
@@ -440,3 +446,12 @@ $('.go').on('click', resumeGame);
 
 $('.pause').on('click', pauseGame);
 $('.restart').on('click', restartGame);
+
+///////////////////////////////////////////////////////////////////////////////
+
+// Let's go!
+buildArrTargets();
+drawTargets();
+drawScore();
+drawLives();
+welcomeDisplay();
