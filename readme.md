@@ -1,6 +1,6 @@
 # Catbus 3000
 
-This is a Breakout / Pong game that I made for my Project Zero, as part of my Web Development Immersive 13 with General Assembly.
+This is a Breakout / Pong game that I made for my Project Zero, as part of my Web Development Immersive 13 with General Assembly. The game is written in JavaScript and uses the HTML5 Canvas element to render and animate the board.
 
 ## Libraries
 1. jQuery
@@ -17,11 +17,12 @@ This is a Breakout / Pong game that I made for my Project Zero, as part of my We
 2. Clone / fork my repo: https://github.com/danielmoi/ga-01-breakout (and open src/index.html in your browser)
 
 ## Approach
-1. Follow tutorial from Mozilla (see below)
-2. Customize code into modular functions and custom variables
-1. Refactor code from setInterval to requestAnimationFrame
-3. Implement Catbus as the paddle
-1. Implement pause / resume functionality
+1. Set up basic canvas
+1. Draw and animate ball
+1. Draw and animate paddle, attach keyboard and mouse event handlers
+1. Draw and animate targets, implement collision detection
+3. Place and animate Catbus
+1. Implement game states (start, pause, restart, win, lose)
 1. Update visual design elements
 
 
