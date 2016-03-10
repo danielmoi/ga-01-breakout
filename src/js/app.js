@@ -147,8 +147,8 @@ var incrementBall = function() {
         resetBallPaddleCatbus();
         gameActive = false;
         cancelAnimationFrame(rAFid);
-        // drawEverything();
-        // gameActive = true;
+        drawEverything();
+        gameActive = true;
 
       }
 
@@ -179,7 +179,6 @@ var incrementPaddle = function() {
   // Move paddle right, delimited ballY right wall
   if (rightPress && paddleX < (canvas.width - paddleWidth)) {
     paddleX += dpX;
-    // moveCatbusRight();
     moveCatbusRight();
 
   }
@@ -187,12 +186,8 @@ var incrementPaddle = function() {
   // Move paddle left, delimited ballY left wall
   else if (leftPress && paddleX > 0) {
     paddleX -= dpX;
-    // moveCatbusLeft();
     moveCatbusLeft();
-
   }
-
-
 };
 
 var moveCatbusLeft = function() {
@@ -207,7 +202,6 @@ var moveCatbusRight = function() {
   catbus.style.transform = 'scaleX(' + sign + ')';
   catbus.style.left = canvas.offsetLeft + (paddleX - 125) + 'px';
   direction = 'right';
-
 };
 
 var moveCatbus = function() {
@@ -263,10 +257,6 @@ var detectCollision = function() {
 
           // Change ball color
           ballColor = getRandomColor();
-
-
-
-
         }
       } // end if
 
@@ -302,9 +292,9 @@ var drawLives = function() {
 
 // CONTAINER FUNCTION
 var drawEverything = function() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (gameActive) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBall();
     drawPaddle();
     drawTargets();
@@ -317,6 +307,8 @@ var drawEverything = function() {
     drawLives();
 
     rAFid = requestAnimationFrame(drawEverything);
+    // There is a NEW rAFid each time this loop runs!!
+    // console.log(rAFid);
   }
 };
 
@@ -334,6 +326,22 @@ var onKeyDown = function(event) {
   // Left key down
   else if (event.keyCode === 37) {
     leftPress = true;
+  }
+
+  else if (event.keyCode === 32) {
+
+    // if gameActive is true
+    if (gameActive) {
+      gameActive = false;
+      cancelAnimationFrame(rAFid);
+    }
+    // if gameActive is false
+    else {
+      gameActive = true;
+      drawEverything();
+
+    }
+
   }
 };
 
@@ -379,8 +387,10 @@ $(document).on('mousemove', onMouseMove);
 
 // BUTTON HANDLERS
 $('.start').on('click', function() {
+  gameActive = true;
   drawEverything();
 });
 $('.stop').on('click', function() {
-  cancelAnimationFrame(rAFid);
+  // cancelAnimationFrame(rAFid);
+  gameActive = false;
 });
