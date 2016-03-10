@@ -6,6 +6,7 @@ var ctx = canvas.getContext('2d');
 var score = 0;
 var lives = 3;
 var gameActive = true;
+var gameOver = false;
 
 var textColor = 'gray';
 
@@ -147,8 +148,9 @@ var incrementBall = function() {
         resetBallPaddleCatbus();
         gameActive = false;
         cancelAnimationFrame(rAFid);
-        drawEverything();
-        gameActive = true;
+        lifeLostDisplay();
+        // drawEverything();
+        // gameActive = true;
 
       }
 
@@ -157,11 +159,12 @@ var incrementBall = function() {
         // debugger;
         console.log('ELSE');
         // reset values
-        resetBallPaddleCatbus();
-        resetScoreLives();
+
         // Why doesn't this cancel rAF? (why is gameActive needed?) but the button works?
+        gameOverDisplay();
         cancelAnimationFrame(rAFid);
         gameActive = false;
+        gameOver = true;
       }
 
 
@@ -172,6 +175,35 @@ var incrementBall = function() {
   // Increment ball
   ballX += dbX;
   ballY += dbY;
+
+};
+
+var restartGame = function() {
+  gameOver = false;
+  resetBallPaddleCatbus();
+  resetScoreLives();
+  buildArrTargets();
+  gameActive = true;
+  drawEverything();
+};
+
+var gamePausedDisplay = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.fillText('Game paused. Press Spacebar to continue.', 65, 220);
+};
+
+var gameOverDisplay = function() {
+
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.fillText('Game over. Press Spacebar to continue.', 65, 220);
+};
+
+var lifeLostDisplay = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.fillText('Lives remaining: ' + lives + '. Press Spacebar to continue.', 65, 220);
 
 };
 
@@ -330,10 +362,14 @@ var onKeyDown = function(event) {
 
   else if (event.keyCode === 32) {
 
+    if (gameOver) {
+      restartGame();
+    }
     // if gameActive is true
-    if (gameActive) {
+    else if (gameActive) {
       gameActive = false;
       cancelAnimationFrame(rAFid);
+      gamePausedDisplay();
     }
     // if gameActive is false
     else {
