@@ -8,7 +8,7 @@ var lives = 3;
 var gameActive = true;
 var gameOver = false;
 
-var textColor = 'gray';
+var textColor = 'rgb(84,91,133)';
 
 // BALL VARIABLES
 var ballX = canvas.width / 2; // initial ball x
@@ -197,7 +197,7 @@ var gameOverDisplay = function() {
 
   ctx.font = '16px Arial';
   ctx.fillStyle = textColor;
-  ctx.fillText('Game over. Press Spacebar to continue.', 65, 220);
+  ctx.fillText('Game over. Press Spacebar to restart.', 65, 220);
 };
 
 var lifeLostDisplay = function() {
@@ -358,28 +358,42 @@ var onKeyDown = function(event) {
   // Left key down
   else if (event.keyCode === 37) {
     leftPress = true;
-  }
-
-  else if (event.keyCode === 32) {
+  } else if (event.keyCode === 32) {
 
     if (gameOver) {
       restartGame();
     }
     // if gameActive is true
     else if (gameActive) {
-      gameActive = false;
-      cancelAnimationFrame(rAFid);
-      gamePausedDisplay();
+      pauseGame();
     }
     // if gameActive is false
     else {
-      gameActive = true;
-      drawEverything();
+      resumeGame();
+
 
     }
 
   }
 };
+
+var pauseGame = function() {
+  if (gameActive === true) {
+    gameActive = false;
+    cancelAnimationFrame(rAFid);
+    gamePausedDisplay();
+  }
+};
+
+//
+var resumeGame = function() {
+  if (gameActive === false) {
+    gameActive = true;
+    drawEverything();
+  }
+};
+
+
 
 var onKeyUp = function(event) {
   // Right key up
@@ -422,11 +436,7 @@ $(document).on('keyup', onKeyUp);
 $(document).on('mousemove', onMouseMove);
 
 // BUTTON HANDLERS
-$('.start').on('click', function() {
-  gameActive = true;
-  drawEverything();
-});
-$('.stop').on('click', function() {
-  // cancelAnimationFrame(rAFid);
-  gameActive = false;
-});
+$('.go').on('click', resumeGame);
+
+$('.pause').on('click', pauseGame);
+$('.restart').on('click', restartGame);
