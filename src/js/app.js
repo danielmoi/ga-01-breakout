@@ -7,6 +7,7 @@ var score = 0;
 var lives = 3;
 var gameActive = true;
 var gameOver = null;
+var firstGame = true;
 
 var textColor = 'rgb(84,91,133)';
 
@@ -145,7 +146,10 @@ var incrementBall = function() {
       if (lives > 0) {
         // reset values
         // console.log('IF');
+
+        // This is necessary to remove ball from bottom wall collision zone
         resetBallPaddleCatbus();
+
         gameActive = false;
         cancelAnimationFrame(rAFid);
         lifeLostDisplay();
@@ -218,21 +222,60 @@ var detectCollision = function() {
   }
 };
 
+///////////////////////////////////////////////////////////////////////////////
+
+// Functions - Text Display
+
 var drawScore = function() {
   ctx.font = '16px Arial';
   ctx.fillStyle = textColor;
-  ctx.fillText('Score: ' + score, 8, 20);
+  ctx.textAlign = 'left';
+  ctx.fillText('Score: ' + score, 10, 20);
 };
 
 var drawLives = function() {
   ctx.font = '16px Arial';
   ctx.fillStyle = textColor;
-  ctx.fillText('Lives: ' + lives, canvas.width - 65, 20);
+  ctx.textAlign = 'right';
+  ctx.fillText('Lives: ' + lives, canvas.width - 10, 20);
+};
+
+var gamePausedDisplay = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.textAlign = 'center';
+  ctx.fillText('Game paused.', canvas.width / 2, 220);
+  ctx.fillText('Press Spacebar to continue.', canvas.width / 2, 250);
+};
+
+var gameOverDisplay = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.textAlign = 'center';
+  ctx.fillText('GAME OVER.', canvas.width / 2, 220);
+  ctx.fillText('Press Spacebar to restart.', canvas.width / 2, 250);
+};
+
+var lifeLostDisplay = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.textAlign = 'center';
+  ctx.fillText('Lives remaining: ' + lives + '.', canvas.width / 2, 220);
+  ctx.fillText('Press Spacebar to continue.', canvas.width / 2, 250);
+};
+
+var welcomeDisplay = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.textAlign = 'center';
+  ctx.fillText('Help Catbus hit the targets!', canvas.width / 2, 220);
+  ctx.fillText('Press Spacebar to start.', canvas.width / 2, 250);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// Functions - single calls
+// Functions - Single Call Draws
+
 var buildArrTargets = function() {
   for (var col = 0; col < targetColumnCount; col++) {
     arrTargets[col] = [];
@@ -246,39 +289,6 @@ var buildArrTargets = function() {
   }
 };
 
-var restartGame = function() {
-  gameOver = false;
-  resetBallPaddleCatbus();
-  resetScoreLives();
-  buildArrTargets();
-  gameActive = true;
-  drawEverything();
-};
-
-var gamePausedDisplay = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.fillText('Game paused. Press Spacebar to continue.', 65, 220);
-};
-
-var gameOverDisplay = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.fillText('Game over. Press Spacebar to restart.', 65, 220);
-};
-
-var lifeLostDisplay = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.fillText('Lives remaining: ' + lives + '. Press Spacebar to continue.', 65, 220);
-};
-
-var welcomeDisplay = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.fillText('Welcome to Catbus 3000!. Press Spacebar to start!', 65, 220);
-};
-
 var resetBallPaddleCatbus = function() {
   ballX = canvas.width / 2;
   ballY = canvas.height - 30;
@@ -288,6 +298,10 @@ var resetBallPaddleCatbus = function() {
   moveCatbus();
 };
 
+///////////////////////////////////////////////////////////////////////////////
+
+// Functions – Game states
+
 var resetScoreLives = function() {
   score = 0;
   lives = 3;
@@ -296,18 +310,33 @@ var resetScoreLives = function() {
 var pauseGame = function() {
   if (gameActive === true) {
     gameActive = false;
+    console.log('pause game');
     cancelAnimationFrame(rAFid);
     gamePausedDisplay();
   }
 };
 var resumeGame = function() {
-  if (gameActive === false || gameOver === null) {
+  if (gameActive === false) {
     console.log('resume game');
     gameActive = true;
     drawEverything();
   }
 };
+var restartGame = function() {
+  gameOver = false;
+  console.log('restart game');
+  resetBallPaddleCatbus();
+  resetScoreLives();
+  buildArrTargets();
+  gameActive = true;
+  drawEverything();
+};
 
+var startGame = function() {
+  console.log('start game');
+  firstGame = false;
+  drawEverything();
+};
 ///////////////////////////////////////////////////////////////////////////////
 
 // Functions - Keyboard / Mouse inputs
@@ -348,7 +377,8 @@ var moveCatbus = function() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// Container LOOP FUNCTION
+// Super Function - Loop Draw
+
 var drawEverything = function() {
 
   if (gameActive) {
@@ -389,6 +419,7 @@ var onKeyUp = function(event) {
 var onKeyDown = function(event) {
   // Right key down
   if (event.keyCode === 39) {
+    console.log('keydown');
     rightPress = true;
   }
   // Left key down
@@ -398,18 +429,22 @@ var onKeyDown = function(event) {
   // Spacebar
   else if (event.keyCode === 32) {
 
-    if (gameOver === null) {
-      drawEverything();
+    if (firstGame) {
+      console.log('1');
+      startGame();
     }
     else if (gameOver) {
+      console.log('2');
       restartGame();
     }
     // if gameActive is true
     else if (gameActive) {
+      console.log('3');
       pauseGame();
     }
     // if gameActive is false
-    else {
+    else if(gameActive === false) {
+      console.log('4');
       resumeGame();
     }
   }
@@ -435,6 +470,7 @@ var onMouseMove = function(event) {
 ///////////////////////////////////////////////////////////////////////////////
 
 // KEYBOARD HANDLERS
+
 $(document).on('keydown', onKeyDown);
 $(document).on('keyup', onKeyUp);
 
@@ -442,14 +478,29 @@ $(document).on('keyup', onKeyUp);
 $(document).on('mousemove', onMouseMove);
 
 // BUTTON HANDLERS
-$('.go').on('click', resumeGame);
+$('.go').on('click', function() {
+  if (firstGame) {
+    startGame();
+  }
+  else if (gameActive === false) {
+    resumeGame();
+  }
+});
 
-$('.pause').on('click', pauseGame);
-$('.restart').on('click', restartGame);
+$('.pause').on('click', function() {
+  if (gameActive) {
+    pauseGame();
+  }
+});
+
+$('.restart').on('click', function() {
+    restartGame();
+});
 
 ///////////////////////////////////////////////////////////////////////////////
 
 // Let's go!
+
 buildArrTargets();
 drawTargets();
 drawScore();
