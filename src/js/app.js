@@ -582,7 +582,7 @@ var showPostScore = function() {
 };
 
 var showScoreboard = function() {
-  gameActive = false;
+  pauseGame();
   $('.postscore-supercontainer').hide();
   $('.scoreboard-supercontainer').show();
   $('.catbus-container').hide();
@@ -600,7 +600,6 @@ scoresRef.orderByChild("score").on("value", function(snapshot) {
 });
 
 var exitScoreboard = function() {
-  gameActive = true;
   $('.catbus-container').show();
   $('.scoreboard-supercontainer').hide();
 
