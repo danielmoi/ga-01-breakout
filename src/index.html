@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Catbus 3000</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
   <link rel="stylesheet" href="css/lib/sweetalert.css">
   <link rel="stylesheet" href="css/style.css">
 
@@ -17,6 +18,23 @@
     <h1>Catbus 3000</h1>
   </header>
 
+  <div class="scoreboard-supercontainer">
+    <h2>Scoreboard</h2>
+    <div class="scoreboard-container">
+    </div>
+  </div>
+
+<div class="postscore-supercontainer">
+  <div class="postscore-container">
+    <h2>Score: <span class="score"></span></h2>
+    <p>Post your score!</p>
+    <input type="text" id="input_score" placeholder="Enter your name">
+    <div class="button-container">
+      <a class="button post-score" href="#">Post Score</a>
+    </div>
+  </div>
+</div>
+
   <div class="container">
     <canvas id="myCanvas" width="480" height="320"></canvas>
 
@@ -26,6 +44,11 @@
     <img src="img/catbus.gif" alt="" id="catbus" class="catbus">
   </div>
 
+  <div class="display-container">
+    <div class="display">
+    </div>
+
+  </div>
   <div class="controls">
     <button class="go">GO!</button>
     <button class="pause">Pause</button>

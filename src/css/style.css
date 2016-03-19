@@ -16,10 +16,11 @@ body {
   margin: 0;
   padding: 0;
   font-size: 14px;
+  font-family: "Helevetica", sans-serif;
 }
 
 body {
-  background-image: url(../img/night.jpg);
+  background-image: url("../img/night.jpg");
   height: 100vh;
   background-size: cover;
 }
@@ -40,6 +41,69 @@ h1 {
   max-width: 50%;
   margin: 0 auto;
   padding-top: 30px;
+}
+
+.scoreboard-supercontainer {
+  display: none;
+  position: absolute;
+  margin: 30px auto;
+  left: 0;
+  right: 0;
+  max-width: 50%;
+  background: #fff;
+  border-radius: 1em;
+  height: 100px;
+}
+.scoreboard-supercontainer h2 {
+  text-align: center;
+  margin-top: 20px;
+  color: #545b85;
+}
+
+.postscore-supercontainer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.postscore-container {
+  position: absolute;
+  margin: 30px auto;
+  left: 0;
+  right: 0;
+  max-width: 50%;
+  padding: 1em;
+  background: #fff;
+  border-radius: 1em;
+  min-height: 100px;
+  text-align: center;
+}
+.postscore-container h2 {
+  text-align: center;
+  margin-top: 20px;
+  color: #545b85;
+}
+.postscore-container p {
+  padding: 10px;
+}
+
+.button-container {
+  margin: 2em;
+}
+
+.display-container {
+  max-width: 50%;
+  margin: 0 auto;
+  text-align: center;
+  background-color: #eeeeee;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.display p {
+  color: #545b85;
+  padding: 10px;
 }
 
 canvas {
@@ -77,4 +141,26 @@ button {
 }
 button:focus {
   outline: none;
+}
+
+input {
+  font-size: 1em;
+  padding: 10px;
+  color: #545b85;
+}
+
+a.button {
+  background-color: #545b85;
+  color: #fff;
+  padding: 1em;
+  border-radius: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  text-decoration: none;
+}
+a.button:focus {
+  outline-width: 3px;
+}
+a.button:hover {
+  text-decoration: none;
 }

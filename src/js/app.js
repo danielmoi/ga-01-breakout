@@ -9,13 +9,21 @@
 // TODO: swipe functionality
 // TODO: size for mobile too
 
+
+// SCOREBOARD
+var myFB = new Firebase("https://catbus.firebaseio.com/");
+var scoresRef = myFB.child("scores");
+
+
+
 // CREATE CANVAS
 var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
 
 // PLAYER VARIABLES
 var score = 0;
-var lives = 3;
+var lives = 1;
+var level = 1;
 var gameActive = true;
 var gameOver = null;
 var firstGame = true;
@@ -248,6 +256,19 @@ var detectCollision = function() {
 
 // Functions - Text Display
 
+var displayDiv = $('.display');
+
+var display = function(arr) {
+  var p1 = $('<p>');
+  var p2 = $('<p>');
+  displayDiv.empty();
+  p1.text(arguments[0]);
+  displayDiv.append(p1);
+  p2.text(arguments[1]);
+  displayDiv.append(p2);
+
+};
+
 var drawScore = function() {
   ctx.font = '16px Arial';
   ctx.fillStyle = textColor;
@@ -268,6 +289,11 @@ var gamePausedDisplay = function() {
   ctx.textAlign = 'center';
   ctx.fillText('Game paused.', canvas.width / 2, 220);
   ctx.fillText('Press Spacebar to continue.', canvas.width / 2, 250);
+  display('Press SPACEBAR to resume');
+};
+
+var gameResumeDisplay = function() {
+  display.text('Press SPACEBAR to pause');
 };
 
 var gameOverDisplay = function() {
@@ -276,6 +302,24 @@ var gameOverDisplay = function() {
   ctx.textAlign = 'center';
   ctx.fillText('GAME OVER.', canvas.width / 2, 220);
   ctx.fillText('Press Spacebar to restart.', canvas.width / 2, 250);
+  display('GAME OVER.');
+  swal({
+    title: "Score: " + score,
+    text: "Post your score!",
+    type: "input",
+    showCancelButton: true,
+    closeOnConfirm: false,
+    animation: "slide-from-top",
+    inputPlaceholder: "Enter your name"
+  }, function(inputValue) {
+    if (inputValue === false) return false;
+    if (inputValue === "") {
+      swal.showInputError("You need to write something!");
+      return false;
+    }
+    swal("Nice!", "You wrote: " + inputValue, "success");
+  });
+
 };
 
 var lifeLostDisplay = function() {
@@ -284,6 +328,7 @@ var lifeLostDisplay = function() {
   ctx.textAlign = 'center';
   ctx.fillText('Lives remaining: ' + lives + '.', canvas.width / 2, 220);
   ctx.fillText('Press Spacebar to continue.', canvas.width / 2, 250);
+  display('Lives remaining: ' + lives);
 };
 
 var welcomeDisplay = function() {
@@ -292,6 +337,7 @@ var welcomeDisplay = function() {
   ctx.textAlign = 'center';
   ctx.fillText('Help Catbus hit the targets!', canvas.width / 2, 220);
   ctx.fillText('Press Spacebar to start.', canvas.width / 2, 250);
+  display('Help Catbus hit the targets!', 'Press SPACEBAR to start');
 };
 
 var winDisplay = function() {
@@ -300,6 +346,7 @@ var winDisplay = function() {
   ctx.textAlign = 'center';
   ctx.fillText('Catbus says well done!!', canvas.width / 2, 220);
   ctx.fillText('Press Spacebar to play again.', canvas.width / 2, 250);
+  display('Catbus says well done!!', 'Press SPACEBAR to play again');
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -350,6 +397,7 @@ var resumeGame = function() {
     console.log('resume game');
     gameActive = true;
     drawEverything();
+    gameResumeDisplay();
   }
 };
 var restartGame = function() {
@@ -507,19 +555,23 @@ $(document).on('keyup', onKeyUp);
 $(document).on('mousemove', onMouseMove);
 
 // BUTTON HANDLERS
-$('.go').on('click', function() {
-  if (firstGame) {
-    startGame();
-  } else if (gameActive === false) {
-    resumeGame();
-  }
+$('.post-score').on('click', function() {
+  console.log('clicked');
 });
 
-$('.pause').on('click', function() {
-  if (gameActive) {
-    pauseGame();
-  }
-});
+// $('.go').on('click', function() {
+//   if (firstGame) {
+//     startGame();
+//   } else if (gameActive === false) {
+//     resumeGame();
+//   }
+// });
+//
+// $('.pause').on('click', function() {
+//   if (gameActive) {
+//     pauseGame();
+//   }
+// });
 
 $('.restart').on('click', function() {
   restartGame();
@@ -535,9 +587,3 @@ drawScore();
 drawLives();
 resetBallPaddleCatbus();
 welcomeDisplay();
-
-swal({
-  title: "Welcome to Catbus 3000!",
-  text: "Press Spacebar to start.",
-  confirmButtonText: "Cool"
-});
