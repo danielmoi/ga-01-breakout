@@ -12,6 +12,8 @@
 
 
 // SCOREBOARD
+
+// $(document).ready(function() {
 var myFB = new Firebase("https://catbus.firebaseio.com/");
 var scoresRef = myFB.child("scores");
 
@@ -247,7 +249,7 @@ var detectCollision = function() {
           ballColor = getRandomColor();
 
           // Check if all targets have been hit === WIN
-          if (score === 10 * targetRowCount * targetColumnCount) {
+          if (score % (10 * targetRowCount * targetColumnCount) === 0) {
             console.log('You win in the console too!');
 
             resetTargets();
@@ -640,3 +642,6 @@ drawLives();
 drawLevel();
 resetBallPaddleCatbus();
 welcomeDisplay();
+
+
+// });
