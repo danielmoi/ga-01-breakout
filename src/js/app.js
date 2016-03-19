@@ -250,11 +250,15 @@ var detectCollision = function() {
 
           // Check if all targets have been hit === WIN
           if (score % (10 * targetRowCount * targetColumnCount) === 0) {
-            console.log('You win in the console too!');
+            console.log('You level up in the console too!');
 
             resetTargets();
-            dbX += 2;
-            dbY -= -2;
+
+
+            dbX < 0 ? dbX -= 0.5 : dbX += 0.5;
+            dbY < 0 ? dbY -= 0.5 : dbY += 0.5;
+
+            level += 1;
 
             // winDisplay();
             // cancelAnimationFrame(rAFid);
