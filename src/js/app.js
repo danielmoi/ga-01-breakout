@@ -180,6 +180,7 @@ var incrementBall = function() {
       // if no lives left...
       else {
         gameOverDisplay();
+        showPostScore();
         cancelAnimationFrame(rAFid);
         gameActive = false;
         gameOver = true;
@@ -303,23 +304,6 @@ var gameOverDisplay = function() {
   ctx.fillText('GAME OVER.', canvas.width / 2, 220);
   ctx.fillText('Press Spacebar to restart.', canvas.width / 2, 250);
   display('GAME OVER.');
-  swal({
-    title: "Score: " + score,
-    text: "Post your score!",
-    type: "input",
-    showCancelButton: true,
-    closeOnConfirm: false,
-    animation: "slide-from-top",
-    inputPlaceholder: "Enter your name"
-  }, function(inputValue) {
-    if (inputValue === false) return false;
-    if (inputValue === "") {
-      swal.showInputError("You need to write something!");
-      return false;
-    }
-    swal("Nice!", "You wrote: " + inputValue, "success");
-  });
-
 };
 
 var lifeLostDisplay = function() {
@@ -555,9 +539,76 @@ $(document).on('keyup', onKeyUp);
 $(document).on('mousemove', onMouseMove);
 
 // BUTTON HANDLERS
-$('.post-score').on('click', function() {
-  console.log('clicked');
+
+var updateFirebase = function() {
+  // debugger;
+  console.log("hello");
+  var name = $('#input_score').val();
+  console.log('Name: ' + name + ', Score: ' + score);
+  var newScoreRef = scoresRef.push({
+    name: name,
+    score: score
+  });
+  var postID = newScoreRef.key();
+
+
+};
+
+
+
+var scoresDisplay = function (arr) {
+  var scoresDiv = $('.score-list');
+  scoresDiv.empty();
+  arr.forEach(function(element) {
+    if (element.name) {
+      var p = $('<p>');
+      var name = element.name;
+      var score = element.score;
+      p.text(score + " – " + name);
+      scoresDiv.prepend(p);
+      console.log("Posting");
+    }
+  });
+};
+
+var postScore = function() {
+  updateFirebase();
+  showScoreboard();
+};
+
+var showPostScore = function() {
+  $('.postscore-supercontainer').show();
+};
+
+var showScoreboard = function() {
+  gameActive = false;
+  $('.postscore-supercontainer').hide();
+  $('.scoreboard-supercontainer').show();
+  $('.catbus-container').hide();
+};
+
+scoresRef.orderByChild("score").on("value", function(snapshot) {
+  var arrScores = [];
+  snapshot.forEach(function(obj) {
+    arrScores.push(obj.val());
+  });
+  scoresDisplay(arrScores);
+  console.log(arrScores);
+}, function(errorObject) {
+  console.log("The read failed: " + errorObject.code);
 });
+
+var exitScoreboard = function() {
+  gameActive = true;
+  $('.catbus-container').show();
+  $('.scoreboard-supercontainer').hide();
+
+};
+
+$('.post-score').on('click', postScore);
+
+$('.exit-scoreboard').on('click', exitScoreboard);
+
 
 // $('.go').on('click', function() {
 //   if (firstGame) {

@@ -19,30 +19,38 @@
   </header>
 
   <div class="scoreboard-supercontainer">
-    <h2>Scoreboard</h2>
     <div class="scoreboard-container">
+      <h2>Scoreboard</h2>
+      <div class="score-list"></div>
+      <div class="button-container center">
+        <a class="button exit-scoreboard" href="#">Back to game</a>
+      </div>
     </div>
   </div>
 
-<div class="postscore-supercontainer">
-  <div class="postscore-container">
-    <h2>Score: <span class="score"></span></h2>
-    <p>Post your score!</p>
-    <input type="text" id="input_score" placeholder="Enter your name">
-    <div class="button-container">
-      <a class="button post-score" href="#">Post Score</a>
+  <div class="postscore-supercontainer">
+    <div class="postscore-container">
+      <h2>Game Over</h2>
+      <h2>Score: <span class="score"></span></h2>
+      <p>Post your score!</p>
+      <input type="text" id="input_score" placeholder="Enter your name">
+      <div class="button-container">
+        <a class="button post-score" href="#">Post Score</a>
+      </div>
     </div>
   </div>
-</div>
+
+
+
 
   <div class="container">
     <canvas id="myCanvas" width="480" height="320"></canvas>
-
-
   </div>
+
   <div class="catbus-container">
     <img src="img/catbus.gif" alt="" id="catbus" class="catbus">
   </div>
+
 
   <div class="display-container">
     <div class="display">
@@ -50,9 +58,13 @@
 
   </div>
   <div class="controls">
-    <button class="go">GO!</button>
-    <button class="pause">Pause</button>
-    <button class="restart">Restart</button>
+
+
+    <a class="button go" href="#">GO!</a>
+    <a class="button pause" href="#">Pause</a>
+    <a class="button restart" href="#">Restart</a>
+    <a class="button show-scoreboard" href="#">Scoreboard</a>
+
   </div>
 
 
