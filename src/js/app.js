@@ -22,7 +22,7 @@ var ctx = canvas.getContext('2d');
 
 // PLAYER VARIABLES
 var score = 0;
-var lives = 1;
+var lives = 2;
 var level = 1;
 var gameActive = true;
 var gameOver = null;
@@ -106,6 +106,15 @@ var drawPaddle = function() {
   ctx.fillStyle = paddleColor;
   ctx.fill();
   ctx.closePath();
+};
+
+var resetTargets = function() {
+  for (var col = 0; col < targetColumnCount; col++) {
+    for (var row = 0; row < targetRowCount; row++) {
+      arrTargets[col][row].status = 'on';
+    }
+  }
+
 };
 
 var drawTargets = function() {
@@ -240,10 +249,14 @@ var detectCollision = function() {
           if (score === 10 * targetRowCount * targetColumnCount) {
             console.log('You win in the console too!');
 
-            winDisplay();
-            cancelAnimationFrame(rAFid);
-            gameActive = false;
-            gameOver = true;
+            resetTargets();
+            dbX += 2;
+            dbY += -2;
+
+            // winDisplay();
+            // cancelAnimationFrame(rAFid);
+            // gameActive = false;
+            // gameOver = true;
 
           }
         }
@@ -277,6 +290,13 @@ var drawScore = function() {
   ctx.fillText('Score: ' + score, 10, 20);
 };
 
+var drawLevel = function() {
+  ctx.font = '16px Arial';
+  ctx.fillStyle = textColor;
+  ctx.textAlign = 'center';
+  ctx.fillText('Level: ' + level, canvas.width/2, 20);
+};
+
 var drawLives = function() {
   ctx.font = '16px Arial';
   ctx.fillStyle = textColor;
@@ -285,12 +305,7 @@ var drawLives = function() {
 };
 
 var gamePausedDisplay = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.textAlign = 'center';
-  ctx.fillText('Game paused.', canvas.width / 2, 220);
-  ctx.fillText('Press Spacebar to continue.', canvas.width / 2, 250);
-  display('Press SPACEBAR to resume');
+  display('Game paused.', 'Press SPACEBAR to resume');
 };
 
 var gameResumeDisplay = function() {
@@ -298,38 +313,18 @@ var gameResumeDisplay = function() {
 };
 
 var gameOverDisplay = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.textAlign = 'center';
-  ctx.fillText('GAME OVER.', canvas.width / 2, 220);
-  ctx.fillText('Press Spacebar to restart.', canvas.width / 2, 250);
-  display('GAME OVER.');
+  display('GAME OVER.', 'Press SPACEBAR to restart.');
 };
 
 var lifeLostDisplay = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.textAlign = 'center';
-  ctx.fillText('Lives remaining: ' + lives + '.', canvas.width / 2, 220);
-  ctx.fillText('Press Spacebar to continue.', canvas.width / 2, 250);
-  display('Lives remaining: ' + lives);
+  display(('Lives remaining: ' + lives), 'Press SPACEBAR to continue' );
 };
 
 var welcomeDisplay = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.textAlign = 'center';
-  ctx.fillText('Help Catbus hit the targets!', canvas.width / 2, 220);
-  ctx.fillText('Press Spacebar to start.', canvas.width / 2, 250);
   display('Help Catbus hit the targets!', 'Press SPACEBAR to start');
 };
 
 var winDisplay = function() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = textColor;
-  ctx.textAlign = 'center';
-  ctx.fillText('Catbus says well done!!', canvas.width / 2, 220);
-  ctx.fillText('Press Spacebar to play again.', canvas.width / 2, 250);
   display('Catbus says well done!!', 'Press SPACEBAR to play again');
 };
 
@@ -455,6 +450,7 @@ var drawEverything = function() {
 
     drawScore();
     drawLives();
+    drawLevel();
 
     rAFid = requestAnimationFrame(drawEverything);
     // There is a NEW rAFid each time this loop runs!!
@@ -639,5 +635,6 @@ buildArrTargets();
 drawTargets();
 drawScore();
 drawLives();
+drawLevel();
 resetBallPaddleCatbus();
 welcomeDisplay();
