@@ -351,8 +351,6 @@ var buildArrTargets = function() {
 var resetBallPaddleCatbus = function() {
   ballX = canvas.width / 2;
   ballY = canvas.height - 30;
-  dbX = 2;
-  dbY = -2;
   paddleX = (canvas.width - paddleWidth) / 2;
   moveCatbus();
 };
@@ -361,10 +359,12 @@ var resetBallPaddleCatbus = function() {
 
 // Functions – Game states
 
-var resetScoreLives = function() {
+var resetIncrements = function() {
   score = 0;
   lives = 3;
   level = 1;
+  dbX = 2;
+  dbY = -2;
 };
 
 var pauseGame = function() {
@@ -387,7 +387,7 @@ var restartGame = function() {
   gameOver = false;
   console.log('restart game');
   resetBallPaddleCatbus();
-  resetScoreLives();
+  resetIncrements();
   buildArrTargets();
   gameActive = true;
   drawEverything();
