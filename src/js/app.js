@@ -8,6 +8,7 @@
 
 // TODO: swipe functionality
 // TODO: size for mobile too
+// _TODO: fix bug that ball goes vertical or horizontal upon hitting last target
 
 
 // SCOREBOARD
@@ -251,7 +252,7 @@ var detectCollision = function() {
 
             resetTargets();
             dbX += 2;
-            dbY += -2;
+            dbY -= -2;
 
             // winDisplay();
             // cancelAnimationFrame(rAFid);
