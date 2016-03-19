@@ -577,6 +577,7 @@ var postScore = function() {
 };
 
 var showPostScore = function() {
+  $('.score').text(score);
   $('.postscore-supercontainer').show();
 };
 
@@ -608,6 +609,8 @@ var exitScoreboard = function() {
 $('.post-score').on('click', postScore);
 
 $('.exit-scoreboard').on('click', exitScoreboard);
+
+$('.show-scoreboard').on('click', showScoreboard);
 
 
 // $('.go').on('click', function() {
