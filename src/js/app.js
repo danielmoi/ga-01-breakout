@@ -462,8 +462,7 @@ var onKeyDown = function(event) {
     if (firstGame) {
       console.log('1');
       startGame();
-    }
-    else if (gameOver) {
+    } else if (gameOver) {
       console.log('2');
       restartGame();
     }
@@ -473,7 +472,7 @@ var onKeyDown = function(event) {
       pauseGame();
     }
     // if gameActive is false
-    else if(gameActive === false) {
+    else if (gameActive === false) {
       console.log('4');
       resumeGame();
     }
@@ -511,8 +510,7 @@ $(document).on('mousemove', onMouseMove);
 $('.go').on('click', function() {
   if (firstGame) {
     startGame();
-  }
-  else if (gameActive === false) {
+  } else if (gameActive === false) {
     resumeGame();
   }
 });
@@ -524,7 +522,7 @@ $('.pause').on('click', function() {
 });
 
 $('.restart').on('click', function() {
-    restartGame();
+  restartGame();
 });
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -537,3 +535,9 @@ drawScore();
 drawLives();
 resetBallPaddleCatbus();
 welcomeDisplay();
+
+swal({
+  title: "Welcome to Catbus 3000!",
+  text: "Press Spacebar to start.",
+  confirmButtonText: "Cool"
+});
