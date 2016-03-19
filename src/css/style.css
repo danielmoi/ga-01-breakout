@@ -77,6 +77,10 @@ h1 {
   padding: 0 2em 2em;
   max-height: 400px;
   overflow: scroll;
+  color: #545b85;
+}
+.score-list p {
+  padding: 5px 0;
 }
 
 .postscore-supercontainer {

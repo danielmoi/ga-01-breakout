@@ -22,7 +22,7 @@ var ctx = canvas.getContext('2d');
 
 // PLAYER VARIABLES
 var score = 0;
-var lives = 2;
+var lives = 3;
 var level = 1;
 var gameActive = true;
 var gameOver = null;
@@ -309,7 +309,7 @@ var gamePausedDisplay = function() {
 };
 
 var gameResumeDisplay = function() {
-  display.text('Press SPACEBAR to pause');
+  display('Good luck!', 'Press SPACEBAR to pause');
 };
 
 var gameOverDisplay = function() {
@@ -361,6 +361,7 @@ var resetBallPaddleCatbus = function() {
 var resetScoreLives = function() {
   score = 0;
   lives = 3;
+  level = 1;
 };
 
 var pauseGame = function() {

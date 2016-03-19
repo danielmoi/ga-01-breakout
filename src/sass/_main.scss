@@ -70,6 +70,10 @@ h1 {
   padding: 0 2em 2em;
   max-height: 400px;
   overflow: scroll;
+  color: $purple;
+  p {
+    padding: 5px 0;
+  }
 
 }
 
